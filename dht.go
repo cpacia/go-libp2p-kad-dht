@@ -70,6 +70,8 @@ type IpfsDHT struct {
 	bootstrapCfg opts.BootstrapConfig
 
 	triggerBootstrap chan struct{}
+
+	enableProviders, enableValues bool
 }
 
 // Assert that IPFS assumptions about interfaces aren't broken. These aren't a
@@ -90,6 +92,8 @@ func New(ctx context.Context, h host.Host, options ...opts.Option) (*IpfsDHT, er
 		return nil, err
 	}
 	dht := makeDHT(ctx, h, cfg.Datastore, cfg.Protocols, cfg.BucketSize)
+	dht.enableProviders = cfg.EnableProviders
+	dht.enableValues = cfg.EnableValues
 	dht.bootstrapCfg = cfg.BootstrapConfig
 
 	// register for network notifs.

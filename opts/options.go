@@ -35,6 +35,8 @@ type Options struct {
 	Protocols       []protocol.ID
 	BucketSize      int
 	BootstrapConfig BootstrapConfig
+	EnableProviders bool
+	EnableValues    bool
 }
 
 // Apply applies the given options to this Option
@@ -58,6 +60,8 @@ var Defaults = func(o *Options) error {
 	}
 	o.Datastore = dssync.MutexWrap(ds.NewMapDatastore())
 	o.Protocols = DefaultProtocols
+	o.EnableProviders = true
+	o.EnableValues = true
 
 	o.BootstrapConfig = BootstrapConfig{
 		// same as that mentioned in the kad dht paper
@@ -146,6 +150,26 @@ func Protocols(protocols ...protocol.ID) Option {
 func BucketSize(bucketSize int) Option {
 	return func(o *Options) error {
 		o.BucketSize = bucketSize
+		return nil
+	}
+}
+
+// EnableProviders enables storing and retrieving provider records.
+//
+// Defaults to true.
+func EnableProviders(enable bool) Option {
+	return func(o *Options) error {
+		o.EnableProviders = enable
+		return nil
+	}
+}
+
+// EnableValues enables storing and retrieving value records.
+//
+// Defaults to true.
+func EnableValues(enable bool) Option {
+	return func(o *Options) error {
+		o.EnableValues = enable
 		return nil
 	}
 }
